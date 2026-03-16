@@ -1,0 +1,1248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+  <title>Daily Loop Generator</title>
+  <style>
+    :root {
+      --bg: #14171b;
+      --bg-2: #1a1e23;
+      --panel-edge: rgba(181, 152, 104, 0.18);
+      --panel-inner: rgba(255, 255, 255, 0.03);
+      --text: #eadfbf;
+      --muted: #b8aa8d;
+      --line: rgba(181, 152, 104, 0.15);
+      --accent: #74b8bf;
+      --accent-soft: rgba(116, 184, 191, 0.22);
+      --button: #252b31;
+      --button-hover: #313943;
+      --shadow: 0 16px 40px rgba(0, 0, 0, 0.34);
+      --radius: 20px;
+    }
+
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: Inter, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background:
+        radial-gradient(circle at top, rgba(116, 184, 191, 0.06), transparent 26%),
+        linear-gradient(180deg, var(--bg) 0%, var(--bg-2) 100%);
+      color: var(--text);
+      min-height: 100vh;
+      padding: 10px;
+    }
+
+    .app {
+      width: 100%;
+      max-width: 760px;
+      margin: 0 auto;
+      display: grid;
+      gap: 10px;
+      padding-bottom: 16px;
+    }
+
+    .card {
+      background: linear-gradient(180deg, rgba(39, 39, 39, 0.95), rgba(31, 31, 31, 0.95));
+      border: 1px solid var(--panel-edge);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow: hidden;
+      position: relative;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      border-radius: inherit;
+      box-shadow: inset 0 0 0 1px var(--panel-inner);
+      pointer-events: none;
+    }
+
+    .card-header {
+      padding: 12px 12px 6px;
+    }
+
+    .loop-header {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+
+    .loop-header-text {
+      min-width: 0;
+      flex: 1 1 auto;
+    }
+
+    .header-actions {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-shrink: 0;
+      margin-left: 8px;
+    }
+
+    .card-body {
+      padding: 10px 12px 12px;
+    }
+
+    h1,
+    h2,
+    p {
+      margin: 0;
+    }
+
+    h1 {
+      font-size: 1.16rem;
+      line-height: 1.1;
+      margin-bottom: 6px;
+      letter-spacing: 0.01em;
+    }
+
+    h2 {
+      font-size: 0.96rem;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .subtle {
+      color: var(--muted);
+      font-size: 0.82rem;
+      line-height: 1.35;
+    }
+
+    .toolbar,
+    .toolbar-secondary,
+    .button-row {
+      display: grid;
+      gap: 6px;
+    }
+
+    .toolbar {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .dice-result {
+      border: 1px solid rgba(181, 152, 104, 0.16);
+      border-radius: 10px;
+      min-height: 32px;
+      padding: 6px 10px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      background: rgba(18, 20, 23, 0.3);
+      color: var(--text);
+      font-size: 0.76rem;
+      font-weight: 700;
+      text-align: center;
+      width: 100%;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .toolbar-secondary {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .button-row {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    button,
+    .file-label {
+      appearance: none;
+      border: 1px solid rgba(181, 152, 104, 0.16);
+      border-radius: 10px;
+      padding: 6px 8px;
+      font-size: 0.76rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: transform 0.12s ease, background 0.12s ease, border-color 0.12s ease;
+      min-height: 32px;
+      background: var(--button);
+      color: var(--text);
+      text-align: center;
+      width: 100%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      text-decoration: none;
+    }
+
+    button:hover,
+    .file-label:hover {
+      background: var(--button-hover);
+    }
+
+    button:active,
+    .file-label:active {
+      transform: scale(0.98);
+    }
+
+    .primary {
+      background: linear-gradient(180deg, rgba(116, 184, 191, 0.22), rgba(116, 184, 191, 0.12));
+      border-color: rgba(116, 184, 191, 0.28);
+      color: #e9efe8;
+    }
+
+    .secondary {
+      background: rgba(52, 56, 61, 0.9);
+      color: var(--text);
+    }
+
+    .ghost {
+      background: transparent;
+      color: var(--muted);
+      border-style: dashed;
+    }
+
+    .step-list {
+      display: grid;
+      gap: 0;
+      border: 1px solid var(--line);
+      border-radius: 18px;
+      overflow: hidden;
+      background: rgba(18, 20, 23, 0.26);
+    }
+
+    .step-card {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 8px;
+      align-items: start;
+      padding: 10px 8px;
+      border-bottom: 1px dashed var(--line);
+      min-height: 52px;
+    }
+
+    .step-card:last-child {
+      border-bottom: 0;
+    }
+
+    .step-main {
+      min-width: 0;
+      display: grid;
+      gap: 4px;
+    }
+
+    .step-label-line {
+      min-width: 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .step-index {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 22px;
+      height: 22px;
+      border-radius: 999px;
+      background: rgba(234, 223, 191, 0.08);
+      border: 1px solid rgba(234, 223, 191, 0.1);
+      color: var(--text);
+      font-size: 0.75rem;
+      font-weight: 800;
+      flex-shrink: 0;
+    }
+
+    .step-title {
+      color: var(--text);
+      font-weight: 700;
+      font-size: 0.9rem;
+      line-height: 1.25;
+      min-width: 0;
+    }
+
+    .step-output-inline {
+      color: var(--text);
+      font-size: 0.88rem;
+      line-height: 1.35;
+      min-width: 0;
+      word-break: break-word;
+      overflow-wrap: anywhere;
+      padding-left: 30px;
+    }
+
+    .step-output-inline.empty {
+      color: var(--muted);
+      font-style: italic;
+    }
+
+    .result-chip {
+      position: relative;
+      display: inline;
+      padding: 0 0.08em;
+      background: linear-gradient(180deg, transparent 32%, var(--accent-soft) 32%, var(--accent-soft) 86%, transparent 86%);
+      border-radius: 0.35em;
+      box-decoration-break: clone;
+      -webkit-box-decoration-break: clone;
+    }
+
+    .result-animate {
+      animation: resultPulse 320ms ease;
+      transform-origin: left center;
+    }
+
+    .dice-result-inner {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.32rem;
+      width: 100%;
+    }
+
+    .dice-sum {
+      color: var(--accent);
+      font-weight: 800;
+    }
+
+    @keyframes resultPulse {
+      0% {
+        opacity: 0.55;
+        transform: translateY(2px) scale(0.985);
+      }
+      60% {
+        opacity: 1;
+        transform: translateY(0) scale(1.01);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0) scale(1);
+      }
+    }
+
+    .roll-label {
+      color: var(--accent);
+      font-weight: 700;
+      margin-right: 0.35em;
+      font-size: 0.8rem;
+    }
+
+    .step-actions {
+      display: flex;
+      gap: 6px;
+      align-items: center;
+      flex-shrink: 0;
+      align-self: center;
+    }
+
+    .icon-btn {
+      width: 30px;
+      height: 30px;
+      min-height: 30px;
+      min-width: 30px;
+      padding: 0;
+      border-radius: 999px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 0.88rem;
+      line-height: 1;
+      flex-shrink: 0;
+    }
+
+    textarea {
+      width: 100%;
+      min-height: 180px;
+      resize: vertical;
+      background: #15181c;
+      color: #e8debf;
+      border: 1px solid rgba(181, 152, 104, 0.16);
+      border-radius: 14px;
+      padding: 12px;
+      font: 0.84rem/1.45 ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+    }
+
+    .status {
+      margin-top: 8px;
+      font-size: 0.82rem;
+      line-height: 1.35;
+      color: var(--muted);
+      min-height: 1.35em;
+    }
+
+    .status.error {
+      color: #f3c6c0;
+    }
+
+    .status.success {
+      color: #bedfd7;
+    }
+
+    .hidden-input,
+    #jsonPanel[hidden] {
+      display: none;
+    }
+
+    .footer-note {
+      font-size: 0.76rem;
+      color: var(--muted);
+      line-height: 1.45;
+    }
+
+    code {
+      color: #d8d1b8;
+    }
+
+    @media (min-width: 640px) {
+      body {
+        padding: 16px;
+      }
+
+      .app {
+        gap: 12px;
+      }
+
+      .toolbar,
+      .toolbar-secondary,
+      .button-row {
+        gap: 8px;
+      }
+
+      .header-actions {
+        gap: 8px;
+      }
+
+      .card-header {
+        padding: 14px 14px 6px;
+      }
+
+      .card-body {
+        padding: 12px 14px 14px;
+      }
+
+      h1 {
+        font-size: 1.28rem;
+      }
+
+      .subtle {
+        font-size: 0.87rem;
+      }
+
+      button,
+      .file-label {
+        min-height: 36px;
+        font-size: 0.82rem;
+        padding: 8px 10px;
+        border-radius: 11px;
+      }
+
+      .dice-result {
+        min-height: 36px;
+        font-size: 0.82rem;
+        padding: 8px 12px;
+        border-radius: 11px;
+      }
+
+      .step-card {
+        padding: 10px 10px;
+      }
+
+      .step-title {
+        font-size: 0.94rem;
+      }
+
+      .step-output-inline {
+        font-size: 0.92rem;
+        padding-left: 34px;
+      }
+
+      .icon-btn {
+        width: 32px;
+        height: 32px;
+        min-height: 32px;
+        min-width: 32px;
+        font-size: 0.92rem;
+      }
+
+      .button-row {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+      }
+
+      textarea {
+        min-height: 220px;
+      }
+    }
+  </style>
+</head>
+<body>
+  <main class="app">
+    <section class="card">
+      <div class="card-header">
+        <h1>Daily Loop Generator</h1>
+        <p class="subtle">Roll the whole loop at once or each step separately. Data comes from editable JSON.</p>
+      </div>
+      <div class="card-body">
+        <div class="toolbar" style="display: none;">
+          <button id="copyResultsBtn" class="secondary" type="button">Copy Loop</button>
+        </div>
+        <div class="toolbar" style="margin-top: 6px;">
+          <button id="rollD6Btn" class="ghost" type="button">1d6</button>
+          <button id="roll2D6Btn" class="ghost" type="button">2d6</button>
+          <div id="diceResult" class="dice-result">—</div>
+        </div>
+        <div id="oracleButtons" class="toolbar-secondary" style="margin-top: 6px;"></div>
+        <div class="status" id="appStatus">Using built-in sample data.</div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-header">
+        <div class="loop-header">
+          <div class="loop-header-text">
+            <h2>Loop Steps</h2>
+            <p class="subtle">Compact layout for small screens.</p>
+          </div>
+          <div class="header-actions">
+            <button id="copyResultsBtnHeader" class="icon-btn secondary" type="button" aria-label="Copy loop">⧉</button>
+            <button id="generateAllBtn" class="icon-btn primary" type="button" aria-label="Roll all">↻</button>
+            <button id="clearResultsBtn" class="icon-btn ghost" type="button" aria-label="Clear all">×</button>
+          </div>
+        </div>
+      </div>
+      <div class="card-body">
+        <div id="stepsContainer" class="step-list"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-body">
+        <div class="toolbar-secondary">
+          <label class="file-label secondary" for="jsonFileInput">Load JSON</label>
+          <button id="toggleJsonBtn" class="ghost" type="button" aria-expanded="false" aria-controls="jsonPanel">Data</button>
+          <input id="jsonFileInput" class="hidden-input" type="file" accept="application/json" />
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="jsonPanel" hidden>
+      <div class="card-header">
+        <h2>JSON Data</h2>
+        <p class="subtle">Edit the JSON below and press Apply.</p>
+      </div>
+      <div class="card-body">
+        <textarea id="jsonEditor" spellcheck="false"></textarea>
+        <div class="button-row" style="margin-top: 10px;">
+          <button id="applyJsonBtn" class="primary" type="button">Apply</button>
+          <button id="resetJsonBtn" class="secondary" type="button">Reset</button>
+          <button id="copyJsonBtn" class="secondary" type="button">Copy</button>
+          <button id="downloadJsonBtn" class="ghost" type="button">Save</button>
+        </div>
+        <div class="status" id="jsonStatus"></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <div class="card-body">
+        <p class="footer-note">JSON supports simple six-entry step arrays like <code>["Rain", "Fog", "Clear", "Wind", "Storm", "Heat"]</code> and d66 oracle tables as keyed objects.</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    const sampleData = {
+      title: "Kal-Arath Style Daily Loop",
+      oracles: [
+        {
+          id: "storyDramaSituations",
+          title: "Story, Drama, Situations",
+          kind: "d66",
+          entries: {
+            "11": "Alliance",
+            "12": "Despair",
+            "13": "Betrayal",
+            "14": "Hope",
+            "15": "Revelation",
+            "16": "Separation",
+            "21": "Competition",
+            "22": "Union",
+            "23": "Victory",
+            "24": "Mystery",
+            "25": "Tragedy",
+            "26": "Corruption",
+            "31": "Deception",
+            "32": "Assault",
+            "33": "Courage",
+            "34": "Defense",
+            "35": "Sacrifice",
+            "36": "Retreat",
+            "41": "Temptation",
+            "42": "Negotiation",
+            "43": "Discovery",
+            "44": "Capture",
+            "45": "Obstacle",
+            "46": "Release",
+            "51": "Triumph",
+            "52": "Renewal",
+            "53": "Loss",
+            "54": "Decline",
+            "55": "Escape",
+            "56": "Intrigue",
+            "61": "Pursuit",
+            "62": "Corruption",
+            "63": "Transformation",
+            "64": "Enlightenment",
+            "65": "Conflict",
+            "66": "Collapse"
+          }
+        },
+        {
+          id: "peoplePlacesThings",
+          title: "People, Places, Things",
+          kind: "d66",
+          entries: {
+            "11": "Ancient",
+            "12": "Gleaming",
+            "13": "Strange",
+            "14": "Ruined",
+            "15": "Dark",
+            "16": "Majestic",
+            "21": "Shining",
+            "22": "Desolate",
+            "23": "Helpful",
+            "24": "Enchanted",
+            "25": "Angry",
+            "26": "Savage",
+            "31": "Abandoned",
+            "32": "Fertile",
+            "33": "Crowded",
+            "34": "Barren",
+            "35": "Distant",
+            "36": "Sacred",
+            "41": "Hidden",
+            "42": "Profane",
+            "43": "Luminous",
+            "44": "Opulent",
+            "45": "Menacing",
+            "46": "Stark",
+            "51": "Vibrant",
+            "52": "Flourishing",
+            "53": "Decaying",
+            "54": "Crumbling",
+            "55": "Silent",
+            "56": "Peaceful",
+            "61": "Bustling",
+            "62": "War-torn",
+            "63": "Forbidden",
+            "64": "Hospitable",
+            "65": "Tranquil",
+            "66": "Foreboding"
+          }
+        }
+      ],
+      steps: [
+        {
+          id: "weather",
+          title: "Weather",
+          description: "Determine the day’s weather.",
+          entries: [
+            "Clear skies and favorable wind.",
+            "Cold drizzle and muddy ground.",
+            "Heavy rain reduces visibility.",
+            "A violent storm threatens safe travel.",
+            "Misty air and uncertain light.",
+            "Dry heat drains strength quickly."
+          ]
+        },
+        {
+          id: "lost",
+          title: "Navigation",
+          description: "Check whether the path holds true.",
+          entries: [
+            "You stay on course.",
+            "You stay on course and make steady progress.",
+            "You drift slightly and lose time.",
+            "You find a better route than expected.",
+            "You are briefly turned around.",
+            "You are badly turned around."
+          ]
+        },
+        {
+          id: "forage",
+          title: "Forage",
+          description: "Resolve any search for food, water, or useful traces.",
+          entries: [
+            "Nothing useful found.",
+            "Enough food or water for one person.",
+            "A rich patch provides extra supplies.",
+            "You find tracks leading somewhere interesting.",
+            "You uncover rare herbs, spoor, or a hidden cache.",
+            "You find an unusually valuable resource."
+          ]
+        },
+        {
+          id: "poi",
+          title: "Point of Interest",
+          description: "See whether the land reveals something notable.",
+          entries: [
+            "No notable location appears.",
+            "A ruined watchtower stands nearby.",
+            "An ancient standing stone marks the way.",
+            "A hidden shrine or tomb entrance is found.",
+            "A forgotten road or bridge emerges from the wild.",
+            "A strange monument hints at deeper secrets."
+          ]
+        },
+        {
+          id: "encounter",
+          title: "Encounter",
+          description: "Resolve any creature, faction, or traveler encountered.",
+          entries: [
+            "No encounter today.",
+            "Signs of something nearby: tracks, smoke, distant cries.",
+            "A cautious traveler or scout crosses your path.",
+            "A dangerous hostile force emerges.",
+            "A strange beast watches from a distance.",
+            "An armed group blocks the way."
+          ]
+        },
+        {
+          id: "camp",
+          title: "Camp",
+          description: "Make camp, consume resources, and recover.",
+          entries: [
+            "Camp is secure and rest is good.",
+            "Camp is calm, though sleep is light.",
+            "Camp is uneasy; sleep is light.",
+            "The fire burns low and morale suffers.",
+            "Camp conditions are poor and recovery is limited.",
+            "Something disturbs the camp before dawn."
+          ]
+        },
+        {
+          id: "night",
+          title: "Night Event",
+          description: "Check for danger, strange omens, or interruption after dark.",
+          entries: [
+            "The night passes quietly.",
+            "Unsettling sounds keep someone awake.",
+            "Something prowls the camp perimeter.",
+            "A full night encounter breaks the rest.",
+            "A dream or omen troubles the sleepers.",
+            "A watchfire reveals movement in the dark."
+          ]
+        }
+      ]
+    };
+
+    function cloneData(value) {
+      return JSON.parse(JSON.stringify(value));
+    }
+
+    const state = {
+      data: cloneData(sampleData),
+      results: {},
+      diceResult: { type: "empty" },
+      oracleTrail: {
+        oracleId: "",
+        results: []
+      }
+    };
+
+    const stepsContainer = document.getElementById("stepsContainer");
+    const jsonEditor = document.getElementById("jsonEditor");
+    const appStatus = document.getElementById("appStatus");
+    const jsonStatus = document.getElementById("jsonStatus");
+    const jsonFileInput = document.getElementById("jsonFileInput");
+    const jsonPanel = document.getElementById("jsonPanel");
+    const toggleJsonBtn = document.getElementById("toggleJsonBtn");
+    const oracleButtons = document.getElementById("oracleButtons");
+
+    function setStatus(element, message, type) {
+      const normalizedType = type || "";
+      element.textContent = message;
+      element.className = normalizedType ? "status " + normalizedType : "status";
+    }
+
+    function escapeHtml(value) {
+      return String(value)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/\"/g, "&quot;")
+        .replace(/'/g, "&#39;");
+    }
+
+    function normalizeEntry(entry, index) {
+      if (typeof entry === "string") {
+        return {
+          text: entry,
+          roll: String(index + 1)
+        };
+      }
+
+      if (!entry || typeof entry !== "object") {
+        return {
+          text: String(entry),
+          roll: String(index + 1)
+        };
+      }
+
+      return {
+        text: String(entry.text == null ? "" : entry.text),
+        roll: entry.roll == null ? String(index + 1) : String(entry.roll)
+      };
+    }
+
+    function validateData(data) {
+      if (!data || typeof data !== "object" || Array.isArray(data)) {
+        throw new Error("JSON must be an object.");
+      }
+
+      if (!Array.isArray(data.steps) || data.steps.length === 0) {
+        throw new Error('JSON must contain a non-empty "steps" array.');
+      }
+
+      if (data.oracles != null) {
+        if (!Array.isArray(data.oracles)) {
+          throw new Error('"oracles" must be an array.');
+        }
+
+        data.oracles.forEach(function (oracle, index) {
+          if (!oracle || typeof oracle !== "object" || Array.isArray(oracle)) {
+            throw new Error("Oracle " + (index + 1) + " must be an object.");
+          }
+
+          if (!oracle.id || typeof oracle.id !== "string") {
+            throw new Error("Oracle " + (index + 1) + ' is missing "id".');
+          }
+
+          if (!oracle.title || typeof oracle.title !== "string") {
+            throw new Error("Oracle " + (index + 1) + ' is missing "title".');
+          }
+
+          if (!oracle.entries || typeof oracle.entries !== "object" || Array.isArray(oracle.entries)) {
+            throw new Error('Oracle "' + oracle.title + '" must have an "entries" object.');
+          }
+        });
+      }
+
+      const ids = new Set();
+
+      data.steps.forEach(function (step, index) {
+        if (!step || typeof step !== "object" || Array.isArray(step)) {
+          throw new Error("Step " + (index + 1) + " must be an object.");
+        }
+
+        if (!step.id || typeof step.id !== "string") {
+          throw new Error("Step " + (index + 1) + ' is missing "id".');
+        }
+
+        if (ids.has(step.id)) {
+          throw new Error("Step ids must be unique. Duplicate id: " + step.id);
+        }
+        ids.add(step.id);
+
+        if (!step.title || typeof step.title !== "string") {
+          throw new Error("Step " + (index + 1) + ' is missing "title".');
+        }
+
+        if (!Array.isArray(step.entries) || step.entries.length !== 6) {
+          throw new Error('Step "' + step.title + '" must have exactly 6 entries.');
+        }
+      });
+    }
+
+    function pickStepEntry(entries) {
+      const normalized = entries.map(function (entry, index) {
+        return normalizeEntry(entry, index);
+      }).filter(function (entry) {
+        return entry.text.length > 0;
+      });
+
+      if (normalized.length === 0) {
+        return { text: "No valid entries.", roll: "" };
+      }
+
+      const roll = rollDie(normalized.length);
+      return normalized[roll - 1];
+    }
+
+    function buildResultHtml(result) {
+      if (!result) {
+        return "—";
+      }
+
+      const rollHtml = result.roll ? '<span class="roll-label">' + escapeHtml(result.roll) + '</span>' : "";
+      const textHtml = '<span class="result-chip">' + escapeHtml(result.text) + '</span>';
+      return rollHtml + textHtml;
+    }
+
+    function animateElement(element) {
+      if (!element) {
+        return;
+      }
+
+      element.classList.remove("result-animate");
+      void element.offsetWidth;
+      element.classList.add("result-animate");
+    }
+
+    function getOracleList() {
+      return Array.isArray(state.data.oracles) ? state.data.oracles : [];
+    }
+
+    function getOracleById(oracleId) {
+      return getOracleList().find(function (oracle) {
+        return oracle.id === oracleId;
+      }) || null;
+    }
+
+    function renderOracleButtons() {
+      if (!oracleButtons) {
+        return;
+      }
+
+      const oracles = getOracleList().slice(0, 2);
+      if (oracles.length === 0) {
+        oracleButtons.innerHTML = "";
+        oracleButtons.style.display = "none";
+        return;
+      }
+
+      oracleButtons.style.display = "grid";
+      oracleButtons.innerHTML = oracles.map(function (oracle) {
+        return '<button class="ghost" type="button" data-oracle-id="' + escapeHtml(oracle.id) + '">' + escapeHtml(oracle.title) + '</button>';
+      }).join("");
+    }
+
+    function rollD66Code() {
+      return String(rollDie(6)) + String(rollDie(6));
+    }
+
+    function rollOracle(oracleId) {
+      const oracle = getOracleById(oracleId);
+      if (!oracle) {
+        setStatus(appStatus, "Oracle not found.", "error");
+        return;
+      }
+
+      const code = rollD66Code();
+      const value = oracle.entries && Object.prototype.hasOwnProperty.call(oracle.entries, code)
+        ? oracle.entries[code]
+        : "No entry for " + code;
+
+      if (state.oracleTrail.oracleId === oracleId) {
+        state.oracleTrail.results.push(value);
+      } else {
+        state.oracleTrail.oracleId = oracleId;
+        state.oracleTrail.results = [value];
+      }
+
+      setStatus(appStatus, state.oracleTrail.results.join(" - "), "success");
+    }
+
+    function generateStep(stepId) {
+      const step = state.data.steps.find(function (item) {
+        return item.id === stepId;
+      });
+
+      if (!step) {
+        return;
+      }
+
+      state.results[stepId] = pickStepEntry(step.entries);
+      renderSteps();
+      setStatus(appStatus, "Step rolled.", "success");
+    }
+
+    function generateAll() {
+      state.data.steps.forEach(function (step) {
+        state.results[step.id] = pickStepEntry(step.entries);
+      });
+      renderSteps();
+      setStatus(appStatus, "Full loop generated.", "success");
+    }
+
+    function clearResults() {
+      state.results = {};
+      state.oracleTrail = {
+        oracleId: "",
+        results: []
+      };
+      renderSteps();
+      setStatus(appStatus, "Results cleared.", "");
+    }
+
+    function renderSteps() {
+      stepsContainer.innerHTML = "";
+
+      state.data.steps.forEach(function (step, index) {
+        const result = state.results[step.id];
+        const article = document.createElement("article");
+        article.className = "step-card";
+        article.innerHTML =
+          '<div class="step-main">' +
+            '<div class="step-label-line">' +
+              '<span class="step-index">' + (index + 1) + '</span>' +
+              '<span class="step-title">' + escapeHtml(step.title) + '</span>' +
+            '</div>' +
+            '<div class="step-output-inline' + (result ? ' result-animate' : ' empty') + '">' + buildResultHtml(result) + '</div>' +
+          '</div>' +
+          '<div class="step-actions">' +
+            '<button class="icon-btn primary" type="button" data-action="roll" data-step-id="' + escapeHtml(step.id) + '" aria-label="Roll ' + escapeHtml(step.title) + '">↻</button>' +
+            '<button class="icon-btn ghost" type="button" data-action="clear" data-step-id="' + escapeHtml(step.id) + '" aria-label="Clear ' + escapeHtml(step.title) + '">×</button>' +
+          '</div>';
+        stepsContainer.appendChild(article);
+      });
+    }
+
+    function resetToSample() {
+      state.data = cloneData(sampleData);
+      state.results = {};
+      state.oracleTrail = {
+        oracleId: "",
+        results: []
+      };
+      jsonEditor.value = JSON.stringify(state.data, null, 2);
+      renderOracleButtons();
+      renderSteps();
+      setStatus(appStatus, "Using built-in sample data.", "");
+      setStatus(jsonStatus, "Sample JSON restored.", "success");
+    }
+
+    function applyJsonFromEditor() {
+      try {
+        const parsed = JSON.parse(jsonEditor.value);
+        validateData(parsed);
+        state.data = parsed;
+        state.results = {};
+        state.oracleTrail = {
+          oracleId: "",
+          results: []
+        };
+        renderOracleButtons();
+        renderSteps();
+        setStatus(appStatus, "Custom JSON applied successfully.", "success");
+        setStatus(jsonStatus, "JSON is valid and loaded.", "success");
+      } catch (error) {
+        setStatus(jsonStatus, error && error.message ? error.message : "Invalid JSON.", "error");
+      }
+    }
+
+    function writeClipboard(text, onSuccess, onError) {
+      if (navigator.clipboard && typeof navigator.clipboard.writeText === "function") {
+        navigator.clipboard.writeText(text).then(onSuccess).catch(onError);
+        return;
+      }
+
+      const textarea = document.createElement("textarea");
+      textarea.value = text;
+      textarea.setAttribute("readonly", "true");
+      textarea.style.position = "fixed";
+      textarea.style.opacity = "0";
+      document.body.appendChild(textarea);
+      textarea.select();
+
+      try {
+        const success = document.execCommand("copy");
+        document.body.removeChild(textarea);
+        if (success) {
+          onSuccess();
+        } else {
+          onError();
+        }
+      } catch (error) {
+        document.body.removeChild(textarea);
+        onError();
+      }
+    }
+
+    function copyJson() {
+      writeClipboard(
+        jsonEditor.value,
+        function () {
+          setStatus(jsonStatus, "JSON copied to clipboard.", "success");
+        },
+        function () {
+          setStatus(jsonStatus, "Could not copy JSON on this device/browser.", "error");
+        }
+      );
+    }
+
+    function downloadJson() {
+      const blob = new Blob([jsonEditor.value], { type: "application/json" });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "daily-loop-data.json";
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      URL.revokeObjectURL(url);
+      setStatus(jsonStatus, "JSON file downloaded.", "success");
+    }
+
+    function renderDiceResult() {
+      const diceResult = document.getElementById("diceResult");
+      if (!diceResult) {
+        return;
+      }
+
+      if (!state.diceResult || state.diceResult.type === "empty") {
+        diceResult.textContent = "—";
+        return;
+      }
+
+      if (state.diceResult.type === "d6") {
+        diceResult.innerHTML = '<span class="dice-result-inner result-animate">' + escapeHtml(String(state.diceResult.value)) + '</span>';
+        return;
+      }
+
+      if (state.diceResult.type === "2d6") {
+        diceResult.innerHTML = '<span class="dice-result-inner result-animate"><span>' + escapeHtml(String(state.diceResult.first)) + ', ' + escapeHtml(String(state.diceResult.second)) + '</span><span>|</span><span class="dice-sum">' + escapeHtml(String(state.diceResult.sum)) + '</span></span>';
+      }
+    }
+
+    function rollDie(sides) {
+      return Math.floor(Math.random() * sides) + 1;
+    }
+
+    function rollD6() {
+      const value = rollDie(6);
+      state.diceResult = {
+        type: "d6",
+        value: value
+      };
+      renderDiceResult();
+      setStatus(appStatus, "Rolled 1d6.", "success");
+    }
+
+    function roll2D6() {
+      const first = rollDie(6);
+      const second = rollDie(6);
+      const sum = first + second;
+      state.diceResult = {
+        type: "2d6",
+        first: first,
+        second: second,
+        sum: sum
+      };
+      renderDiceResult();
+      setStatus(appStatus, "Rolled 2d6.", "success");
+    }
+
+    function buildResultsText() {
+      const title = state.data && state.data.title ? state.data.title : "Daily Loop";
+      const lines = state.data.steps.map(function (step, index) {
+        const result = state.results[step.id];
+        const text = result ? (result.roll ? "[" + result.roll + "] " : "") + result.text : "—";
+        return (index + 1) + ". " + step.title + ": " + text;
+      });
+      return title + "\n\n" + lines.join("\n");
+    }
+
+    function copyResults() {
+      writeClipboard(
+        buildResultsText(),
+        function () {
+          setStatus(appStatus, "Daily loop copied to clipboard.", "success");
+        },
+        function () {
+          setStatus(appStatus, "Could not copy the daily loop on this device/browser.", "error");
+        }
+      );
+    }
+
+    function setJsonPanelOpen(isOpen) {
+      if (isOpen) {
+        jsonPanel.removeAttribute("hidden");
+      } else {
+        jsonPanel.setAttribute("hidden", "");
+      }
+      toggleJsonBtn.setAttribute("aria-expanded", String(isOpen));
+    }
+
+    async function loadFile(file) {
+      try {
+        const text = await file.text();
+        const parsed = JSON.parse(text);
+        validateData(parsed);
+        state.data = parsed;
+        state.results = {};
+        state.oracleTrail = {
+          oracleId: "",
+          results: []
+        };
+        jsonEditor.value = JSON.stringify(parsed, null, 2);
+        renderOracleButtons();
+        renderSteps();
+        setStatus(appStatus, "Loaded JSON file: " + file.name, "success");
+        setStatus(jsonStatus, "JSON file loaded successfully.", "success");
+      } catch (error) {
+        setStatus(appStatus, "Failed to load JSON file.", "error");
+        setStatus(jsonStatus, error && error.message ? error.message : "Invalid JSON file.", "error");
+      }
+    }
+
+    document.getElementById("generateAllBtn").addEventListener("click", generateAll);
+    document.getElementById("rollD6Btn").addEventListener("click", rollD6);
+    document.getElementById("roll2D6Btn").addEventListener("click", roll2D6);
+    document.getElementById("clearResultsBtn").addEventListener("click", clearResults);
+    document.getElementById("copyResultsBtn").addEventListener("click", copyResults);
+    document.getElementById("copyResultsBtnHeader").addEventListener("click", copyResults);
+    document.getElementById("applyJsonBtn").addEventListener("click", applyJsonFromEditor);
+    document.getElementById("resetJsonBtn").addEventListener("click", resetToSample);
+    document.getElementById("copyJsonBtn").addEventListener("click", copyJson);
+    document.getElementById("downloadJsonBtn").addEventListener("click", downloadJson);
+    toggleJsonBtn.addEventListener("click", function () {
+      setJsonPanelOpen(jsonPanel.hasAttribute("hidden"));
+      if (!jsonPanel.hasAttribute("hidden")) {
+        setStatus(jsonStatus, "JSON panel opened.", "");
+      }
+    });
+
+    oracleButtons.addEventListener("click", function (event) {
+      const button = event.target.closest("button[data-oracle-id]");
+      if (!button) {
+        return;
+      }
+
+      rollOracle(button.getAttribute("data-oracle-id"));
+    });
+
+    stepsContainer.addEventListener("click", function (event) {
+      const button = event.target.closest("button[data-step-id]");
+      if (!button) {
+        return;
+      }
+
+      const action = button.getAttribute("data-action");
+      const stepId = button.getAttribute("data-step-id");
+
+      if (action === "roll") {
+        generateStep(stepId);
+        return;
+      }
+
+      if (action === "clear") {
+        delete state.results[stepId];
+        renderSteps();
+        setStatus(appStatus, "Step cleared.", "");
+      }
+    });
+
+    jsonFileInput.addEventListener("change", function (event) {
+      const file = event.target.files && event.target.files[0];
+      if (file) {
+        loadFile(file);
+      }
+      event.target.value = "";
+    });
+
+    jsonEditor.value = JSON.stringify(state.data, null, 2);
+    setJsonPanelOpen(false);
+    renderOracleButtons();
+    renderSteps();
+    renderDiceResult();
+  </script>
+</body>
+</html>
