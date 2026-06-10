@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -61,9 +62,6 @@
     font-size: 0.9rem;
     opacity: 0.7;
     margin-top: 0.2rem;
-  }
-  header p a {
-    color: var(--muted);
   }
 
   /* ── TABS ── */
@@ -605,6 +603,174 @@
   }
   @keyframes spin { to { transform: rotate(360deg); } }
 
+
+  /* ── GEAR TAB ── */
+  .gear-tab { flex: 0 0 2.8rem; font-size: 1rem; }
+
+  /* ── CONFIG TAB ── */
+  .config-section {
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+  }
+  .config-section-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.6rem 0.85rem;
+    background: var(--parchment-mid);
+    border-bottom: 1px solid var(--border);
+    cursor: pointer;
+    user-select: none;
+  }
+  .config-section-header h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.8rem;
+    letter-spacing: 0.1em;
+    color: var(--ink);
+    margin: 0;
+  }
+  .config-section-toggle {
+    font-size: 0.75rem;
+    color: var(--muted);
+    transition: transform 0.2s;
+  }
+  .config-section.collapsed .config-section-toggle { transform: rotate(-90deg); }
+  .config-section-body {
+    padding: 0.75rem;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 0.75rem;
+  }
+  .config-section.collapsed .config-section-body { display: none; }
+
+  .config-table-card {
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    background: var(--parchment-dark);
+    overflow: hidden;
+  }
+  .config-table-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.4rem 0.6rem;
+    background: var(--parchment-mid);
+    border-bottom: 1px solid var(--border);
+  }
+  .config-table-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.68rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--muted);
+  }
+  .config-table-body { padding: 0.5rem 0.6rem; display: flex; flex-direction: column; gap: 0.5rem; }
+
+  .config-field-label {
+    font-family: 'Cinzel', serif;
+    font-size: 0.6rem;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+    color: var(--muted);
+    margin-bottom: 0.2rem;
+  }
+  .config-heading-input {
+    width: 100%;
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 0.82rem;
+    font-weight: 600;
+    background: var(--parchment);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 0.2rem 0.4rem;
+    color: var(--ink);
+    outline: none;
+    margin-bottom: 0.3rem;
+  }
+  .config-heading-input:focus { border-color: var(--accent); }
+  .config-entries-textarea {
+    width: 100%;
+    font-family: 'Crimson Pro', Georgia, serif;
+    font-size: 0.8rem;
+    background: var(--parchment);
+    border: 1px solid var(--border);
+    border-radius: 3px;
+    padding: 0.3rem 0.4rem;
+    color: var(--ink);
+    outline: none;
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.5;
+  }
+  .config-entries-textarea:focus { border-color: var(--accent); }
+
+  .config-controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    align-items: center;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 0.75rem;
+  }
+  .btn.config-apply {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--parchment);
+  }
+  .btn.config-apply:hover { background: var(--accent-light); border-color: var(--accent-light); }
+  .btn.config-reset {
+    background: transparent;
+    border-color: var(--muted);
+    color: var(--muted);
+  }
+  .btn.config-reset:hover { background: var(--muted); color: var(--parchment); }
+  .config-status {
+    font-size: 0.78rem;
+    font-style: italic;
+    color: var(--entrance-color);
+    margin-left: auto;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  .config-status.visible { opacity: 1; }
+
+  .upload-area {
+    border: 1.5px dashed var(--border);
+    border-radius: 6px;
+    padding: 1rem;
+    text-align: center;
+    background: var(--parchment-mid);
+    margin-bottom: 0.75rem;
+    cursor: pointer;
+    transition: border-color 0.15s;
+  }
+  .upload-area:hover { border-color: var(--accent); }
+  .upload-area p { font-size: 0.82rem; color: var(--muted); margin: 0.2rem 0; }
+  .upload-area .upload-icon { font-size: 1.4rem; color: var(--gold); }
+  .upload-area input[type="file"] { display: none; }
+
+  .json-format-box {
+    background: var(--parchment-dark);
+    border: 1px solid var(--border);
+    border-radius: 5px;
+    padding: 0.6rem 0.75rem;
+    font-family: monospace;
+    font-size: 0.72rem;
+    color: var(--muted);
+    white-space: pre;
+    overflow-x: auto;
+    line-height: 1.5;
+  }
+  .download-config-row {
+    display: flex;
+    gap: 0.5rem;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
   /* ── DECORATIVE DIVIDER ── */
   .divider {
     text-align: center;
@@ -616,6 +782,8 @@
     user-select: none;
   }
 
+  header a, footer a { color: var(--muted); }
+
   footer {
     text-align: center;
     padding: 1rem;
@@ -624,21 +792,19 @@
     opacity: 0.4;
     font-style: italic;
   }
-  footer a {
-    color: var(--muted);
-  }
 </style>
 </head>
 <body>
 
 <header>
   <h1>⬡ Site &amp; Dungeon Generator</h1>
-  <p>based on <a href="https://chrismcdee.itch.io/mythic-bastionland">Mythic Bastionland</a> and <a href="https://traversefantasy.blogspot.com/2022/11/bite-sized-dungeons.html">Bite-Sized Dungeons</a></p>
+  <p>based on <a target="_blank" href="https://chrismcdee.itch.io/mythic-bastionland">Mythic Bastionland</a> and <a target="_blank" href="https://traversefantasy.blogspot.com/2022/11/bite-sized-dungeons.html">Bite-Sized Dungeons</a></p>
 </header>
 
 <div class="tabs">
   <button class="tab-btn active" onclick="switchTab('sites')">Sites</button>
   <button class="tab-btn" onclick="switchTab('dungeons')">Dungeons</button>
+  <button class="tab-btn gear-tab" onclick="switchTab('config')" title="Configuration">⚙</button>
 </div>
 
 <div class="panel">
@@ -704,9 +870,103 @@
     </div>
   </div>
 
+  <!-- ══════════════ CONFIG TAB ══════════════ -->
+  <div id="tab-config" class="tab-content">
+
+    <div class="config-controls">
+      <button class="btn config-apply" onclick="applyConfig()">✓ Apply Changes</button>
+      <button class="btn config-reset" onclick="resetAllConfig()">↺ Reset All to Defaults</button>
+      <span class="config-status" id="config-status">Changes applied.</span>
+    </div>
+
+    <!-- JSON Upload / Download -->
+    <div class="config-section collapsed">
+      <div class="config-section-header" onclick="toggleConfigSection(this)">
+        <h3>Import / Export JSON</h3>
+        <span class="config-section-toggle">▾</span>
+      </div>
+      <div class="config-section-body" style="display:none; grid-template-columns: 1fr 1fr; gap: 1rem; align-items: start;">
+        <div style="display:flex; flex-direction:column; gap:0.75rem;">
+          <button class="btn export" style="align-self:flex-start;" onclick="downloadConfigJSON()">⬇ Download Config JSON</button>
+          <label class="upload-area" for="config-upload" style="cursor:pointer;">
+            <div class="upload-icon">⬆</div>
+            <p><strong>Upload JSON config file</strong></p>
+            <p>Only tables present in the file will be updated.</p>
+            <input type="file" id="config-upload" accept=".json" onchange="handleConfigUpload(event)">
+          </label>
+        </div>
+        <div>
+          <div class="config-field-label">JSON Format Reference</div>
+          <div class="json-format-box">{
+  "sites": {
+    "feature": {
+      "prompts": ["prompt 1", "prompt 2", ...],
+      "spark": {
+        "col1": { "heading": "Condition", "entries": [...] },
+        "col2": { "heading": "Nature",    "entries": [...] }
+      }
+    },
+    "danger":   { ... },
+    "treasure": { ... }
+  },
+  "dungeons": {
+    "monster-t": { "prompts": [...], "spark": { ... } },
+    "monster":   { ... },
+    "treasure":  { ... },
+    "special":   { ... },
+    "trapped":   { ... },
+    "empty":     { ... }
+  },
+  "seeded": {
+    "feature": {
+      "monster-t": ["prompt 1", ...],
+      "monster":   ["prompt 1", ...],
+      "treasure":  ["prompt 1", ...],
+      "special":   ["prompt 1", ...],
+      "trapped":   ["prompt 1", ...],
+      "empty":     ["prompt 1", ...]
+    },
+    "danger":   { ... },
+    "treasure": { ... }
+  }
+}</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sites tables -->
+    <div class="config-section collapsed" id="cfg-section-sites">
+      <div class="config-section-header" onclick="toggleConfigSection(this)">
+        <h3>Sites — Prompts &amp; Sparks</h3>
+        <span class="config-section-toggle">▾</span>
+      </div>
+      <div class="config-section-body" id="cfg-body-sites"></div>
+    </div>
+
+    <!-- Dungeons tables -->
+    <div class="config-section collapsed" id="cfg-section-dungeons">
+      <div class="config-section-header" onclick="toggleConfigSection(this)">
+        <h3>Dungeons — Prompts &amp; Sparks</h3>
+        <span class="config-section-toggle">▾</span>
+      </div>
+      <div class="config-section-body" id="cfg-body-dungeons"></div>
+    </div>
+
+    <!-- Seeded prompts -->
+    <div class="config-section collapsed" id="cfg-section-seeded">
+      <div class="config-section-header" onclick="toggleConfigSection(this)">
+        <h3>Seeded Dungeon Prompts (Expand from Site)</h3>
+        <span class="config-section-toggle">▾</span>
+      </div>
+      <div class="config-section-body" id="cfg-body-seeded" style="display:none"></div>
+    </div>
+
+  </div>
+
+
 </div>
 
-<footer>Made by Dusko Petrovic of the <a href="https://vanishing-vault.itch.io/">Vanishing Vault</a></footer>
+<footer>Made by Dusko Petrovic of the <a target="_blank" href="https://vanishing-vault.itch.io/">Vanishing Vault</a></footer>
 
 <script>
 // ══════════════════════════════════════════════════════
@@ -969,7 +1229,7 @@ function shuffle(arr) {
 // ══════════════════════════════════════════════════════
 
 function rollSpark(type) {
-  const t = SPARK_TABLES[type];
+  const t = (CFG_SITE_SPARKS||SPARK_TABLES)[type] || SPARK_TABLES[type];
   return {
     a: t.col1.entries[rnd(20)],
     b: t.col2.entries[rnd(20)],
@@ -1012,8 +1272,8 @@ function generateSiteData() {
     type: types[idx],
     title: '',
     notes: '',
-    prompt: pick(SITE_PROMPTS[types[idx]]),
-    desc: pick(SITE_PROMPTS[types[idx]]),
+    prompt: pick((CFG_SITE_PROMPTS||SITE_PROMPTS)[types[idx]]),
+    desc: pick((CFG_SITE_PROMPTS||SITE_PROMPTS)[types[idx]]),
     spark: rollSpark(types[idx]),
     isEntrance: false,
     isHiddenEntrance: false,
@@ -1474,6 +1734,7 @@ function switchTab(name) {
   document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
   document.getElementById('tab-' + name).classList.add('active');
   event.currentTarget.classList.add('active');
+  if (name === 'config') buildConfigUI();
 }
 
 
@@ -1729,7 +1990,7 @@ let showDungPrompts = true;
 // ══════════════════════════════════════════════════════
 
 function rollDungSpark(type) {
-  const t = DUNG_SPARK[type];
+  const t = (CFG_DUNG_SPARKS||DUNG_SPARK)[type] || DUNG_SPARK[type];
   return { a: t.col1.entries[rnd(20)], b: t.col2.entries[rnd(20)] };
 }
 
@@ -1763,9 +2024,11 @@ function generateDungeonData(seed = null) {
   if (shuffledEmpty[1] !== undefined) typePool[shuffledEmpty[1]] = 'trapped';
 
   // Pick prompt pool — seeded or default
-  const promptPool = seed && SEEDED_PROMPTS[seed.nodeType]
-    ? SEEDED_PROMPTS[seed.nodeType]
-    : DUNG_PROMPTS;
+  const activeSeeded = CFG_SEEDED_PROMPTS || SEEDED_PROMPTS;
+  const activeDungPrompts = CFG_DUNG_PROMPTS || DUNG_PROMPTS;
+  const promptPool = seed && activeSeeded[seed.nodeType]
+    ? activeSeeded[seed.nodeType]
+    : activeDungPrompts;
 
   // Seed spark: for seeded dungeons, bias the first monster/treasure/special
   // rooms to echo the site node's own spark vocabulary
@@ -1774,8 +2037,8 @@ function generateDungeonData(seed = null) {
     type,
     title: '',
     notes: '',
-    prompt: pick(promptPool[type] || DUNG_PROMPTS[type]),
-    desc: pick(promptPool[type] || DUNG_PROMPTS[type]),
+    prompt: pick(promptPool[type] || (CFG_DUNG_PROMPTS||DUNG_PROMPTS)[type] || DUNG_PROMPTS[type]),
+    desc: pick(promptPool[type] || (CFG_DUNG_PROMPTS||DUNG_PROMPTS)[type] || DUNG_PROMPTS[type]),
     spark: rollDungSpark(type),
     seeded: !!seed,
   }));
@@ -1790,9 +2053,44 @@ function generateDungeonData(seed = null) {
     rooms[idx2].isSecondEntrance = true;
   }
 
+  // Guarantee all 6 nodes are reachable via a connectivity check + repair
+  let safeEdges = [...edges];
+
+  function connectedNodes(edgeList) {
+    const adj = Array.from({length: 6}, () => []);
+    for (const [a, b] of edgeList) { adj[a].push(b); adj[b].push(a); }
+    const visited = new Set([0]);
+    const queue = [0];
+    while (queue.length) {
+      const n = queue.shift();
+      for (const nb of adj[n]) { if (!visited.has(nb)) { visited.add(nb); queue.push(nb); } }
+    }
+    return visited;
+  }
+
+  // Find any isolated nodes and wire them to the nearest connected node
+  let visited = connectedNodes(safeEdges);
+  for (let node = 0; node < 6; node++) {
+    if (!visited.has(node)) {
+      // Connect to a random already-visited node
+      const target = [...visited][rnd(visited.size)];
+      safeEdges.push([node, target]);
+      // Trim one non-spanning edge to keep count at 6
+      // Remove the last edge that isn't part of the spanning path
+      for (let i = safeEdges.length - 2; i >= 0; i--) {
+        const without = [...safeEdges.slice(0, i), ...safeEdges.slice(i + 1)];
+        if (connectedNodes(without).size === 6) {
+          safeEdges = without;
+          break;
+        }
+      }
+      visited = connectedNodes(safeEdges);
+    }
+  }
+
   // Assign connection lengths
   const connLengthPool = shuffle([...CONN_LENGTHS]);
-  const connections = edges.map(([from, to], i) => ({
+  const connections = safeEdges.map(([from, to], i) => ({
     from, to,
     length: connLengthPool[i] || 'Doorway',
   }));
@@ -2220,7 +2518,7 @@ function buildExportCanvas(mode) {
   ctx.fillStyle = EX.muted;
   ctx.font = 'italic 18px Georgia, serif';
   ctx.textAlign = 'center';
-  ctx.fillText('Site & Dungeon Generator', W/2, H - 10);
+  ctx.fillText('Site & Dungeon Generator · Knights & Bite-Sized Dungeons', W/2, H - 10);
 
   return cv;
 }
@@ -2595,6 +2893,353 @@ function exportPDF(mode) {
       btn.disabled = false;
     }
   }, 50);
+}
+
+
+// ══════════════════════════════════════════════════════
+//  CONFIG SYSTEM
+// ══════════════════════════════════════════════════════
+
+// Live config mirrors — start as copies of the originals
+let CFG_SITE_PROMPTS   = null;
+let CFG_SITE_SPARKS    = null;
+let CFG_DUNG_PROMPTS   = null;
+let CFG_DUNG_SPARKS    = null;
+let CFG_SEEDED_PROMPTS = null;
+
+function deepClone(obj) { return JSON.parse(JSON.stringify(obj)); }
+
+function initConfig() {
+  if (CFG_SITE_PROMPTS) return; // already initialised
+  CFG_SITE_PROMPTS   = deepClone(SITE_PROMPTS);
+  CFG_SITE_SPARKS    = deepClone(SPARK_TABLES);
+  CFG_DUNG_PROMPTS   = deepClone(DUNG_PROMPTS);
+  CFG_DUNG_SPARKS    = deepClone(DUNG_SPARK);
+  CFG_SEEDED_PROMPTS = deepClone(SEEDED_PROMPTS);
+}
+
+// After apply, generation functions read from CFG_* instead of constants.
+// We override pick() calls by patching the live variables.
+function getActivePrompts(which) {
+  initConfig();
+  if (which === 'site')   return CFG_SITE_PROMPTS;
+  if (which === 'dung')   return CFG_DUNG_PROMPTS;
+  if (which === 'seeded') return CFG_SEEDED_PROMPTS;
+}
+function getActiveSparks(which) {
+  initConfig();
+  if (which === 'site') return CFG_SITE_SPARKS;
+  if (which === 'dung') return CFG_DUNG_SPARKS;
+}
+
+// ── Build config UI ──
+function buildConfigUI() {
+  initConfig();
+
+  // Sites
+  const siteTypes = ['feature','danger','treasure'];
+  const siteTypeLabels = { feature:'Feature', danger:'Danger', treasure:'Treasure' };
+  buildConfigSection('cfg-body-sites', siteTypes, siteTypeLabels, 'site');
+
+  // Dungeons
+  const dungTypes = ['monster-t','monster','treasure','special','trapped','empty'];
+  const dungTypeLabels = {
+    'monster-t':'Monster + Treasure', monster:'Monster', treasure:'Treasure',
+    special:'Special', trapped:'Trapped', empty:'Empty',
+  };
+  buildConfigSection('cfg-body-dungeons', dungTypes, dungTypeLabels, 'dung');
+
+  // Seeded prompts
+  buildSeededSection();
+}
+
+function buildConfigSection(containerId, types, labels, which) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
+  const prompts = which === 'site' ? CFG_SITE_PROMPTS : CFG_DUNG_PROMPTS;
+  const sparks  = which === 'site' ? CFG_SITE_SPARKS  : CFG_DUNG_SPARKS;
+
+  for (const type of types) {
+    const card = document.createElement('div');
+    card.className = 'config-table-card';
+
+    const cssType = type === 'monster-t' ? 'monster-t' : type;
+    const typeColorClass = which === 'site'
+      ? `type-${type}`
+      : `room-type-${cssType}`;
+
+    const spark = which === 'site' ? sparks[type] : sparks[type];
+    const promptArr = prompts[type] || [];
+    const col1 = spark?.col1 || { heading:'', entries:[] };
+    const col2 = spark?.col2 || { heading:'', entries:[] };
+
+    card.innerHTML = `
+      <div class="config-table-header">
+        <span class="config-table-label">
+          <span class="node-type-badge ${typeColorClass}" style="font-size:0.6rem;padding:0.1rem 0.3rem;">${labels[type]}</span>
+        </span>
+        <button class="btn config-reset" style="font-size:0.6rem;padding:0.15rem 0.4rem;"
+          onclick="resetOneTable('${which}','${type}')">↺ Reset</button>
+      </div>
+      <div class="config-table-body">
+        <div>
+          <div class="config-field-label">Prompts (one per line)</div>
+          <textarea class="config-entries-textarea" id="cfg-${which}-${type}-prompts"
+            style="min-height:160px">${promptArr.join('\n')}</textarea>
+        </div>
+        <div>
+          <div class="config-field-label">Spark — ${col1.heading} (one per line)</div>
+          <input class="config-heading-input" id="cfg-${which}-${type}-c1h"
+            value="${col1.heading}" placeholder="Column 1 heading">
+          <textarea class="config-entries-textarea" id="cfg-${which}-${type}-c1"
+            style="min-height:100px">${col1.entries.join('\n')}</textarea>
+        </div>
+        <div>
+          <div class="config-field-label">Spark — ${col2.heading} (one per line)</div>
+          <input class="config-heading-input" id="cfg-${which}-${type}-c2h"
+            value="${col2.heading}" placeholder="Column 2 heading">
+          <textarea class="config-entries-textarea" id="cfg-${which}-${type}-c2"
+            style="min-height:100px">${col2.entries.join('\n')}</textarea>
+        </div>
+      </div>`;
+
+    container.appendChild(card);
+  }
+}
+
+function buildSeededSection() {
+  const container = document.getElementById('cfg-body-seeded');
+  container.innerHTML = '';
+  const siteTypes = ['feature','danger','treasure'];
+  const dungTypes = ['monster-t','monster','treasure','special','trapped','empty'];
+  const dungLabels = {
+    'monster-t':'Monster+Treasure', monster:'Monster', treasure:'Treasure',
+    special:'Special', trapped:'Trapped', empty:'Empty',
+  };
+  const siteLabels = { feature:'Feature', danger:'Danger', treasure:'Treasure' };
+
+  for (const sType of siteTypes) {
+    const wrapper = document.createElement('div');
+    wrapper.style.cssText = 'grid-column: 1 / -1;';
+    const heading = document.createElement('div');
+    heading.className = 'config-field-label';
+    heading.style.cssText = 'font-size:0.72rem;margin:0.5rem 0 0.4rem;border-top:1px solid var(--border);padding-top:0.5rem;';
+    heading.textContent = `Site node type: ${siteLabels[sType]}`;
+    wrapper.appendChild(heading);
+    container.appendChild(wrapper);
+
+    for (const dType of dungTypes) {
+      const arr = CFG_SEEDED_PROMPTS[sType]?.[dType] || [];
+      const card = document.createElement('div');
+      card.className = 'config-table-card';
+      card.innerHTML = `
+        <div class="config-table-header">
+          <span class="config-table-label">${siteLabels[sType]} → ${dungLabels[dType]}</span>
+          <button class="btn config-reset" style="font-size:0.6rem;padding:0.15rem 0.4rem;"
+            onclick="resetSeededTable('${sType}','${dType}')">↺ Reset</button>
+        </div>
+        <div class="config-table-body">
+          <div>
+            <div class="config-field-label">Prompts (one per line)</div>
+            <textarea class="config-entries-textarea" id="cfg-seeded-${sType}-${dType}"
+              style="min-height:120px">${arr.join('\n')}</textarea>
+          </div>
+        </div>`;
+      container.appendChild(card);
+    }
+  }
+}
+
+// ── Apply config ──
+function applyConfig() {
+  initConfig();
+  const siteTypes = ['feature','danger','treasure'];
+  const dungTypes = ['monster-t','monster','treasure','special','trapped','empty'];
+
+  // Read sites
+  for (const type of siteTypes) {
+    const pEl = document.getElementById(`cfg-site-${type}-prompts`);
+    const c1hEl = document.getElementById(`cfg-site-${type}-c1h`);
+    const c1El  = document.getElementById(`cfg-site-${type}-c1`);
+    const c2hEl = document.getElementById(`cfg-site-${type}-c2h`);
+    const c2El  = document.getElementById(`cfg-site-${type}-c2`);
+    if (pEl)  CFG_SITE_PROMPTS[type]           = pEl.value.split('\n').map(s=>s.trim()).filter(Boolean);
+    if (c1hEl) CFG_SITE_SPARKS[type].col1.heading = c1hEl.value.trim();
+    if (c1El)  CFG_SITE_SPARKS[type].col1.entries  = c1El.value.split('\n').map(s=>s.trim()).filter(Boolean);
+    if (c2hEl) CFG_SITE_SPARKS[type].col2.heading = c2hEl.value.trim();
+    if (c2El)  CFG_SITE_SPARKS[type].col2.entries  = c2El.value.split('\n').map(s=>s.trim()).filter(Boolean);
+  }
+
+  // Read dungeons
+  for (const type of dungTypes) {
+    const pEl  = document.getElementById(`cfg-dung-${type}-prompts`);
+    const c1hEl = document.getElementById(`cfg-dung-${type}-c1h`);
+    const c1El  = document.getElementById(`cfg-dung-${type}-c1`);
+    const c2hEl = document.getElementById(`cfg-dung-${type}-c2h`);
+    const c2El  = document.getElementById(`cfg-dung-${type}-c2`);
+    if (pEl)  CFG_DUNG_PROMPTS[type]           = pEl.value.split('\n').map(s=>s.trim()).filter(Boolean);
+    if (c1hEl) CFG_DUNG_SPARKS[type].col1.heading = c1hEl.value.trim();
+    if (c1El)  CFG_DUNG_SPARKS[type].col1.entries  = c1El.value.split('\n').map(s=>s.trim()).filter(Boolean);
+    if (c2hEl) CFG_DUNG_SPARKS[type].col2.heading = c2hEl.value.trim();
+    if (c2El)  CFG_DUNG_SPARKS[type].col2.entries  = c2El.value.split('\n').map(s=>s.trim()).filter(Boolean);
+  }
+
+  // Read seeded
+  for (const sType of siteTypes) {
+    for (const dType of dungTypes) {
+      const el = document.getElementById(`cfg-seeded-${sType}-${dType}`);
+      if (el) {
+        if (!CFG_SEEDED_PROMPTS[sType]) CFG_SEEDED_PROMPTS[sType] = {};
+        CFG_SEEDED_PROMPTS[sType][dType] = el.value.split('\n').map(s=>s.trim()).filter(Boolean);
+      }
+    }
+  }
+
+  showConfigStatus('✓ Changes applied — next generation will use updated tables.');
+}
+
+function resetOneTable(which, type) {
+  initConfig();
+  if (which === 'site') {
+    CFG_SITE_PROMPTS[type] = deepClone(SITE_PROMPTS[type]);
+    CFG_SITE_SPARKS[type]  = deepClone(SPARK_TABLES[type]);
+  } else {
+    CFG_DUNG_PROMPTS[type] = deepClone(DUNG_PROMPTS[type]);
+    CFG_DUNG_SPARKS[type]  = deepClone(DUNG_SPARK[type]);
+  }
+  buildConfigSection(
+    which === 'site' ? 'cfg-body-sites' : 'cfg-body-dungeons',
+    which === 'site' ? ['feature','danger','treasure'] : ['monster-t','monster','treasure','special','trapped','empty'],
+    which === 'site'
+      ? { feature:'Feature', danger:'Danger', treasure:'Treasure' }
+      : { 'monster-t':'Monster + Treasure', monster:'Monster', treasure:'Treasure', special:'Special', trapped:'Trapped', empty:'Empty' },
+    which
+  );
+}
+
+function resetSeededTable(sType, dType) {
+  initConfig();
+  if (!CFG_SEEDED_PROMPTS[sType]) CFG_SEEDED_PROMPTS[sType] = {};
+  CFG_SEEDED_PROMPTS[sType][dType] = deepClone(SEEDED_PROMPTS[sType]?.[dType] || []);
+  buildSeededSection();
+}
+
+function resetAllConfig() {
+  CFG_SITE_PROMPTS   = deepClone(SITE_PROMPTS);
+  CFG_SITE_SPARKS    = deepClone(SPARK_TABLES);
+  CFG_DUNG_PROMPTS   = deepClone(DUNG_PROMPTS);
+  CFG_DUNG_SPARKS    = deepClone(DUNG_SPARK);
+  CFG_SEEDED_PROMPTS = deepClone(SEEDED_PROMPTS);
+  buildConfigUI();
+  showConfigStatus('↺ All tables reset to defaults.');
+}
+
+function showConfigStatus(msg) {
+  const el = document.getElementById('config-status');
+  el.textContent = msg;
+  el.classList.add('visible');
+  setTimeout(() => el.classList.remove('visible'), 3000);
+}
+
+// ── Toggle collapsible sections ──
+function toggleConfigSection(header) {
+  const section = header.parentElement;
+  const body = section.querySelector('.config-section-body');
+  const isGrid = body.style.gridTemplateColumns || body.dataset.displayType === 'grid';
+  section.classList.toggle('collapsed');
+  if (section.classList.contains('collapsed')) {
+    body.style.display = 'none';
+  } else {
+    body.style.display = isGrid ? 'grid' : '';
+  }
+}
+
+// ── JSON Download ──
+function downloadConfigJSON() {
+  initConfig();
+  const dungTypes = ['monster-t','monster','treasure','special','trapped','empty'];
+  const siteTypes = ['feature','danger','treasure'];
+
+  const out = { sites: {}, dungeons: {}, seeded: {} };
+
+  for (const t of siteTypes) {
+    out.sites[t] = {
+      prompts: CFG_SITE_PROMPTS[t],
+      spark: {
+        col1: { heading: CFG_SITE_SPARKS[t].col1.heading, entries: CFG_SITE_SPARKS[t].col1.entries },
+        col2: { heading: CFG_SITE_SPARKS[t].col2.heading, entries: CFG_SITE_SPARKS[t].col2.entries },
+      },
+    };
+  }
+  for (const t of dungTypes) {
+    out.dungeons[t] = {
+      prompts: CFG_DUNG_PROMPTS[t],
+      spark: {
+        col1: { heading: CFG_DUNG_SPARKS[t].col1.heading, entries: CFG_DUNG_SPARKS[t].col1.entries },
+        col2: { heading: CFG_DUNG_SPARKS[t].col2.heading, entries: CFG_DUNG_SPARKS[t].col2.entries },
+      },
+    };
+  }
+  for (const sType of siteTypes) {
+    out.seeded[sType] = {};
+    for (const dType of dungTypes) {
+      out.seeded[sType][dType] = CFG_SEEDED_PROMPTS[sType]?.[dType] || [];
+    }
+  }
+
+  const blob = new Blob([JSON.stringify(out, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'generator-config.json';
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+
+// ── JSON Upload ──
+function handleConfigUpload(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = (e) => {
+    try {
+      const data = JSON.parse(e.target.result);
+      initConfig();
+      let updated = [];
+
+      if (data.sites) {
+        for (const [type, val] of Object.entries(data.sites)) {
+          if (!CFG_SITE_PROMPTS[type]) continue;
+          if (val.prompts)       { CFG_SITE_PROMPTS[type] = val.prompts; updated.push(`sites/${type} prompts`); }
+          if (val.spark?.col1)   { CFG_SITE_SPARKS[type].col1 = val.spark.col1; updated.push(`sites/${type} spark col1`); }
+          if (val.spark?.col2)   { CFG_SITE_SPARKS[type].col2 = val.spark.col2; updated.push(`sites/${type} spark col2`); }
+        }
+      }
+      if (data.dungeons) {
+        for (const [type, val] of Object.entries(data.dungeons)) {
+          if (!CFG_DUNG_PROMPTS[type]) continue;
+          if (val.prompts)       { CFG_DUNG_PROMPTS[type] = val.prompts; updated.push(`dungeons/${type} prompts`); }
+          if (val.spark?.col1)   { CFG_DUNG_SPARKS[type].col1 = val.spark.col1; updated.push(`dungeons/${type} spark col1`); }
+          if (val.spark?.col2)   { CFG_DUNG_SPARKS[type].col2 = val.spark.col2; updated.push(`dungeons/${type} spark col2`); }
+        }
+      }
+      if (data.seeded) {
+        for (const [sType, rooms] of Object.entries(data.seeded)) {
+          if (!CFG_SEEDED_PROMPTS[sType]) CFG_SEEDED_PROMPTS[sType] = {};
+          for (const [dType, arr] of Object.entries(rooms)) {
+            CFG_SEEDED_PROMPTS[sType][dType] = arr;
+            updated.push(`seeded/${sType}/${dType}`);
+          }
+        }
+      }
+
+      buildConfigUI();
+      showConfigStatus(`✓ Loaded: ${updated.length} table(s) updated. Click Apply to confirm.`);
+    } catch (err) {
+      showConfigStatus('✗ Invalid JSON file.');
+    }
+    event.target.value = '';
+  };
+  reader.readAsText(file);
 }
 
 // ── Redraw canvas on resize ──
